@@ -1,5 +1,3 @@
--- not by me the original is: https://raw.githubusercontent.com/2dgeneralspam1/lua-releases/main/scripts/lyrics-singer.lua
-
 --[[
  ██▓   ▓██   ██▓ ██▀███   ██▓ ▄████▄    ██████ 
 ▓██▒    ▒██  ██▒▓██ ▒ ██▒▓██▒▒██▀ ▀█  ▒██    ▒ 
@@ -86,7 +84,7 @@ spawn(function()
 	if checkLogs() then 
 		print("Anti-Fling/Noclip enabled.\n")
 	end
-	
+
 	-- Noclip here 
 	game:GetService('RunService').Stepped:connect(function()
 		pcall(function() -- less gay than spamming i,v pairs bullshit (which will fuck your pc [sometimes])
@@ -112,7 +110,7 @@ spawn(function()
 		print("Anti-AFK enabled.\n\n")
 		print("Lyrics Bot v1.06 waiting...\n")
 	end
-	
+
 	-- Advanced antiafk?!@?#?!@ crazy! 
 	for i,v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
 		v:Disable()
@@ -140,11 +138,8 @@ local function botDrawLots()
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Fun fact: My owner was not very happy when coding me. You can tell from the nature of the code...", "All")
 	else 
 		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Hello! My name is "..game.Players.LocalPlayer.Name..", and I'm a robot! I was built with an API that allows me access to millions of songs! Use the command ;lyrics [song name] to see if I can sing your favorite songs.", "All")
-  elseif drawlots = 5 then
-    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Hello! My name is "..game.Players.LocalPlayer.Name..", and I'm a robot! I was built with an API that allows me access to millions of songs! Use the command ;lyrics [song name] to see if I can sing your favorite songs.", "All")
 	end
 end
-
 -- Send first tooltip 
 game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 I am a cool robot!", "All")
 
@@ -161,7 +156,7 @@ end)
 --\\ Lyrics functions 
 local function validSong(checkSong) -- Check if its actually a valid fucking song/get song 
 	local request = loadstring(game:GetService("HttpService"):GetAsync("https://lyrics.flc.bar/search?song=" ..checkSong, true))
-	
+
 	if tostring(request) ~= '{"lyrics":{}}' then 
 		return game.HttpService:JSONDecode(request) -- actually send back the shit or whatever idk kill me 
 	else
@@ -180,7 +175,7 @@ end
 --\\ get ready for the most gay code you've ever seen 
 game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, recipient) -- Log messages 
 	local sentMessage = tostring(message) -- im gay 
-	
+
 	-- \\ stop music function thing 
 	if string.match(sentMessage, ";stop") and tostring(sender) == tostring(game.Players.LocalPlayer.Name) and shared.inUse then 
 		if checkLogs() then 
@@ -190,7 +185,7 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 		shared.inUse = false
 		shared.forceStop = true
 	end
-	
+
 	if string.match(sentMessage, ";lyrics") and shared.inUse == false then -- Find message with ;lyrics in it AND don't respond if there's already a thing going 
 		print("h")
 		local songRequester = tostring(sender) -- Get sender's name 
@@ -258,9 +253,9 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 							saySomething("🤖 The controller of this bot has requested the current song to be terminated. I am now open for more song requests.")
 							break 
 						end
-						game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🎵 | "..v, "All")
+						game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(`🎵 | {v}`, "All")
 					end
-					
+
 					if shared.forceStop then 
 						shared.forceStop = false 
 					else
@@ -288,7 +283,7 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 					print("\n"..songRequester.." just said ;lyrics for some reason. Their opinion was automatically filtered.")
 				end
 			end
-			
+
 		else 
 			-- send that the user is a retard 
 			saySomething("🤖 I cannot read hashtags,"..songRequester..". Please try a more SFW song.") -- requester isn't set yet? 
