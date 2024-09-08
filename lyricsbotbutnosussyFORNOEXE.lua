@@ -1,310 +1,85 @@
---[[
- ██▓   ▓██   ██▓ ██▀███   ██▓ ▄████▄    ██████ 
-▓██▒    ▒██  ██▒▓██ ▒ ██▒▓██▒▒██▀ ▀█  ▒██    ▒ 
-▒██░     ▒██ ██░▓██ ░▄█ ▒▒██▒▒▓█    ▄ ░ ▓██▄   
-▒██░     ░ ▐██▓░▒██▀▀█▄  ░██░▒▓▓▄ ▄██▒  ▒   ██▒
-░██████▒ ░ ██▒▓░░██▓ ▒██▒░██░▒ ▓███▀ ░▒██████▒▒
-░ ▒░▓  ░  ██▒▒▒ ░ ▒▓ ░▒▓░░▓  ░ ░▒ ▒  ░▒ ▒▓▒ ▒ ░
-░ ░ ▒  ░▓██ ░▒░   ░▒ ░ ▒░ ▒ ░  ░  ▒   ░ ░▒  ░ ░
-  ░ ░   ▒ ▒ ░░    ░░   ░  ▒ ░░        ░  ░  ░  
-    ░  ░░ ░        ░      ░  ░ ░            ░  
-        ░ ░                  ░                
-        
-What is logged when you are using this script: 
- - Your HASHED IP 
- - The game you execute this script on 
- - FPS on execution 
- - Ping on exeuction 
-]]
+local songName,plr
+local debounce = false
 
+shared.stopped = false
 
---\\ Iris Compat 
---[[if syn then 
-
-else
-	loadstring(game:HttpGet('https://raw.githubusercontent.com/2dgeneralspam1/lua-releases/main/iris-compat.lua'))()
-end]]
--- my take on why i use custom loadstrings: https://paste.sh/WuQf3Z9l#-9vdpfOakqXpZXv6UyjF5rBA
-
-
---\\ notifications 
-local function notify(text,duration)
-	game.StarterGui:SetCore("SendNotification", {
-		Title = "Garfield"; 
-		Text = text;
-		Icon = ""; 
-		Duration = duration; 
-	})
-end
-
-spawn(function()
-	notify("🥳 Good news! You can now stop songs from playing.", 5)
-	task.wait(1)
-	notify("Use the command ';stop' to perform this action. Others cannot use this command.", 5)
-end)
-
-local function kickClown() -- yes 
-	game.Players.LocalPlayer:Kick("CLOWN DETECTED\n\nHow 🤔 💯 😮 🤷 🥱 😨 🤔 🐼 🤷 fucking 👏 👏 💰 💯 💰 🍆 😈 💪🏻 👿🎮 stupid 🚫 🚫🤔 👑💩 💢 🚶‍♀️🚶😤 💩 🚫 🤡 👑💩 can 👁️ 👁️ 🍞 🥫 🦎 👄 😎 👍 🏃🏽‍♂️🏃🏽‍♂️🏃🏽‍♂️ you 😂👉 👈🏼 👈 👉👲 🤬 😀😊 👈 🏻🏿 💓 get? 🍒 🔥 2️⃣0️⃣ 🔳 🔳🎉 🔟 🉐🉐🉐🍊🉐 5️⃣ 🎉😂 🔳 🍆 🔳 🕔 🔟 0️⃣ 💦2️⃣💦1️⃣ 💦2️⃣💦1️⃣ ❌ ❕ 0⃣ 💦2️⃣💦1️⃣ 0⃣ 0⃣ ❕ 💦2️⃣💦1️⃣ ❌ ❌ ❌ ❌ 0⃣ 0⃣ ❕ 💦2️⃣💦1️⃣ ❌ ❌ ❕ 💦2️⃣💦1️⃣ ❌ ❌ ❌ ❌ ❕ 3️⃣ 😗 😘🤔 😗 ⭕ 3⃣ 😩 🆕 😧 3️⃣ 😘🤔 ⭕ ⭕ 👏🎆 🆕 3️⃣ 3⃣ 👏🎆 🆕 ⭕ ⭕ ⭕ 😩 retard") -- kick yo ass!
-	task.wait(0.3)
-	while true do -- insane 
-		while true do end 
-		while true do end 
-		while true do end 
-	end
-end
-
-if typeof(shared.sayDelay) ~= "number" then -- if you're a retard
-	kickClown()
-end
-
-
-if shared.sayDelay < 3 and shared.sayDelay ~= 3 then -- If its smaller than 3 and not equal to 3 then 
-	kickClown()
-end
-
--- Check if logs are on 
-local function checkLogs() 
-	if shared.botLogs == true then 
-		return true 
-	else 
-		return false 
-	end
-end
--- is this less gay than shared.botLogs == true? probbaly not 
-
--- Set up logs 
-if checkLogs() then 
-	print("Lyrics Bot Logs")
-	print('@@WHITE@@')
-	print("Made by garfieldcatto on V3rmillion\n")
-end
-
--- Anti-Fling
-spawn(function()
-	if checkLogs() then 
-		print("Anti-Fling/Noclip enabled.\n")
-	end
-
-	-- Noclip here 
-	game:GetService('RunService').Stepped:connect(function()
-		pcall(function() -- less gay than spamming i,v pairs bullshit (which will fuck your pc [sometimes])
-			if game.Players.LocalPlayer.Character.Humanoid.RigType == Enum.HumanoidRigType.R6 then
-				game.Players.LocalPlayer.Character.Head.CanCollide = false
-				game.Players.LocalPlayer.Character.Torso.CanCollide = false
-				game.Players.LocalPlayer.Character["Left Leg"].CanCollide = false
-				game.Players.LocalPlayer.Character["Right Leg"].CanCollide = false
-			elseif game.Players.LocalPlayer.Character.Humanoid.RigType == Enum.HumanoidRigType.R15 then
-				game.Players.LocalPlayer.Character.Head.CanCollide = false
-				game.Players.LocalPlayer.Character.UpperTorso.CanCollide = false
-				game.Players.LocalPlayer.Character.LowerTorso.CanCollide = false
-				game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = false
-			end
-		end)
-	end)
-end)
-
-
--- Anti-AFK 
-spawn(function()
-	if checkLogs() then 
-		print("Anti-AFK enabled.\n\n")
-		print("Lyrics Bot v1.06 waiting...\n")
-	end
-
-	-- Advanced antiafk?!@?#?!@ crazy! 
-	for i,v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
-		v:Disable()
-	end
-end)
-
---\\ DO NOT MODFIY THESE 
-shared.inUse = false -- ⚠️ DO NOT MODIFY THIS 
-shared.songCount = 0  -- DO NOT MODIFY THIS EITHER 
-shared.forceStop = false 
---\\ DO NOT MODFIY THESE  
-
-
--- cleaner like this i think 
-local function botDrawLots()
-	local drawLots = math.random(1,10) -- ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha 
-
-	if drawLots == 10 then 
-		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Fun fact: Did you know that this script was made by a user called 'garfieldcatto'?.", "All")		
-	elseif drawLots == 9 then 
-		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Fun fact: I was edited by minicup! The original creator is garfieldcatto", "All")
-	elseif drawLots == 8 then 
-		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Am I flooding the chat? Am I annoying you? Why don't you pay me some attention and try me out, then!", "All")
-	elseif drawLots == 7 then 
-		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Fun fact: My owner was not very happy when coding me. You can tell from the nature of the code...", "All")
-	else 
-		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Hello! My name is "..game.Players.LocalPlayer.Name..", and I'm a robot! I was built with an API that allows me access to millions of songs! Use the command ;lyrics [song name] to see if I can sing your favorite songs.", "All")
-	end
-end
--- Send first tooltip 
-game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 I am a cool robot!", "All")
-
-
--- Loop tooltips 
-spawn(function()
-	while task.wait(7) do 
-		if shared.inUse == false then 
-			botDrawLots()
-		end
-	end
-end)
-
---\\ Lyrics functions 
-local function validSong(checkSong) -- Check if its actually a valid fucking song/get song 
-	local request = loadstring(game:GetService("HttpService"):GetAsync("https://lyrics.flc.bar/search?song=" ..checkSong, true))
-
-	if tostring(request) ~= '{"lyrics":{}}' then 
-		return game.HttpService:JSONDecode(request) -- actually send back the shit or whatever idk kill me 
-	else
-		return false 
-	end
-end
-
-
-local function saySomething(text) -- so my code isn't filled with 5400000 fucking same things 
-	task.wait(0.1)
+local function sendMessage(text)
 	game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(text, "All")
 end
 
 
---\\ Main lyrics bot function 
---\\ get ready for the most gay code you've ever seen 
-game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, recipient) -- Log messages 
-	local sentMessage = tostring(message) -- im gay 
-
-	-- \\ stop music function thing 
-	if string.match(sentMessage, ";stop") and tostring(sender) == tostring(game.Players.LocalPlayer.Name) and shared.inUse then 
-		if checkLogs() then 
-			print('@@RED@@')
-			print("\nYou requested the current song to stop.")
+game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents:WaitForChild('OnMessageDoneFiltering').OnClientEvent:Connect(function(msgdata)
+	if plr ~= nil and (msgdata.FromSpeaker == plr or msgdata.FromSpeaker == game:GetService('Players').LocalPlayer.Name) then
+		if string.lower(msgdata.Message) == ';stop' then
+			shared.stopped = true
+			debounce = true
+			task.wait(3)
+			debounce = false
 		end
-		shared.inUse = false
-		shared.forceStop = true
 	end
-
-	if string.match(sentMessage, ";lyrics") and shared.inUse == false then -- Find message with ;lyrics in it AND don't respond if there's already a thing going 
-		print("h")
-		local songRequester = tostring(sender) -- Get sender's name 
-		if not string.match(sentMessage,"#") then -- check if there's hashtags
-			if sentMessage ~= ";lyrics" and sentMessage ~= ";lyrics " then -- Make sure it's not some retard just sending ;lyrics 
-				shared.inUse = true -- we're singing now [also prevents the tooptip thing form spamming the fucking chat even if its a invalid song]
-
-				local songName = tostring(string.gsub(message, ";lyrics ", "")) -- Song name 
-
-				if checkLogs() then 
-					print('@@YELLOW@@')
-					print("\nFound command: '"..tostring(message).."'. Requested by "..tostring(sender))
-				end 
-
-				--\\ Check if the shit actually is a song / Get the song's lyrics 
-				local songLyrics = validSong(songName) 
-				if songLyrics ~= false then  
-					if checkLogs() then -- no fucking way! its a valid song. send it on the consoles 
-						print('@@GREEN@@')
-						print("\nSong valid! Singing song "..songName)
-					end 
-
-					-- Put the lyrics in a table 
-					local lyrics = {}
-					for i in songLyrics.lyrics:gmatch("[^\r\n]+") do
-						table.insert(lyrics, i)
-					end
-
-					-- Print out lyrics part 1 
-					if checkLogs() then 
-						print('@@LIGHT_CYAN@@')
-						print("\n\nRequested Lyrics: \n")
-						print('@@LIGHT_GRAY@@')
-					end
-
-
-					for i, v in pairs(lyrics) do
-						if checkLogs() then -- Print out lyrics part 2 
-							print(v.." ")
-						end -- optimizing code by putting the same shit in the shit shit! 
-
-						-- find how damn long the song will be 
-						shared.songCount = shared.songCount + shared.sayDelay -- 3 for 3 seconds speak delay [or whatever you have set]
-					end
-
-					shared.songMinutesCount = math.round(shared.songCount/60) -- crazy math innit 
-
-					if checkLogs() then -- Print how long the song will be lmao and other stuff ig 
-						print('@@LIGHT_CYAN@@')
-						print("\nSong will last for "..shared.songCount.." seconds. Thats about "..shared.songMinutesCount.." minutes.") -- insane 
-						print('@@WHITE@@')
-						print("\n\nWaiting for song to finish...\n")
-					end
-
-					saySomething("🤖 Success, "..songRequester.."! The song was found in my API's libraries. The requested song will last for about "..tostring(shared.songMinutesCount).." minutes. Please keep in mind that I cannot take song requests during my singing time.") -- announce the bullshit 
-
-					-- reset the bullshit 
-					shared.songCount = 0 
-					shared.songMinutesCount = 0 
-
-					-- ACTUALYL SING THE BULLSHIT 
-					for i, v in pairs(lyrics) do
-						task.wait(shared.sayDelay)
-						if shared.forceStop then -- i wonder if there's another way to do this lmao 
-							saySomething("🤖 The controller of this bot has requested the current song to be terminated. I am now open for more song requests.")
-							break 
-						end
-						game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(`🎵 | {v}`, "All")
-					end
-
-					if shared.forceStop then 
-						shared.forceStop = false 
-					else
-						-- we're done! 
-						shared.inUse = false
-						-- Announce that he's finished
-						saySomething("🤖 I'm finished with singing! I am now open for more song requests.")
-						-- the tooltip is gonna fire so no need to say anything more 
-					end	
-				else -- say that it's a fucking invalid song 
-					saySomething("🤖 Sorry "..songRequester..", that song wasn't found by my API.")
-					if checkLogs() then 
-						print('@@RED@@')
-						print("\nInvalid song requested. Song name: "..songName)
-					end
-					shared.inUse = false
-					-- we're done! 
-				end
-
-
-
-			else -- send that the user is a retard 
-				if checkLogs() then 
-					print('@@RED@@')
-					print("\n"..songRequester.." just said ;lyrics for some reason. Their opinion was automatically filtered.")
-				end
-			end
-
-		else 
-			-- send that the user is a retard 
-			saySomething("🤖 I cannot read hashtags,"..songRequester..". Please try a more SFW song.") -- requester isn't set yet? 
-			if checkLogs() then 
-				print('@@RED@@')
-				print("\n"..songRequester.." requested a song with a hashtag in it. Their opinion was automatically filtered.")
-			end
+	if debounce or not string.match(msgdata.Message, ';lyrics ') or string.gsub(msgdata.Message, ';lyrics', '') == '' or game:GetService('Players')[msgdata.FromSpeaker] == game:GetService('Players').LocalPlayer then
+		return
+	end
+	debounce = true
+	local speaker = msgdata.FromSpeaker
+	local msg = string.lower(msgdata.Message):gsub('>lyrics ', ''):gsub('"', ''):gsub(' by ','/')
+	local speakerDisplay = game:GetService('Players')[speaker].DisplayName
+	plr = game:GetService('Players')[speaker].Name
+	songName = string.gsub(msg, " ", ""):lower()
+	local response
+	local suc,er = pcall(function()
+		response = game.HttpService:RequestAsync({
+			Url = "https://lyrist.vercel.app/api/" .. songName,
+			Method = "GET",
+		})
+	end)
+	if not suc then
+		sendMessage('Unexpected error, please retry')
+		task.wait(3)
+		debounce = false
+		return
+	end
+	local lyricsData = game:GetService('HttpService'):JSONDecode(response.Body)
+	local lyricsTable = {}
+	if lyricsData.error and lyricsData.error == "Lyrics Not found" then
+		debounce = true
+		sendMessage('Lyrics were not found')
+		task.wait(3)
+		debounce = false
+		return
+	end
+	for line in string.gmatch(lyricsData.lyrics, "[^\n]+") do
+		table.insert(lyricsTable, line)
+	end
+	sendMessage('Fetched lyrics')
+	task.wait(2)
+	sendMessage('Playing song requested by ' .. speakerDisplay .. '. They can stop it by saying ";stop"')
+	task.wait(3)
+	for i, line in ipairs(lyricsTable) do
+		if shared.stopped then
+			shared.stopped = false
+			break
 		end
-	else -- shield your eyes from the ugly code 
-		-- why not a function? because stfu 
-		if shared.inUse then  -- Show that the bot is in use when something was requested 
-			-- i didn't do the thing so i have to do it again here lMAO
-			-- doing it here again so it doesn't spam 
-			if not string.match(sentMessage,"#") then -- check if there's hashtags
-				if sentMessage ~= ";lyrics" and sentMessage ~= ";lyrics " then -- Make sure it's not some retard just sending ;lyrics 
-					if checkLogs() then 
-						print('@@RED@@')
-						print("\nA song was requested while the bot was singing.")
-					end
-				end
+		sendMessage(`🎙️ | {line}`)
+		task.wait(4.7)
+	end
+	task.wait(3)
+	debounce = false
+	sendMessage('Ended. You can request songs again.')
+end)
+
+task.spawn(function()
+	while task.wait(60) do
+		if not debounce then
+			sendMessage('I am a lyrics bot! Type ;lyrics [SongName]" and I will sing the song for you!')
+			task.wait(2)
+			if not debounce then
+				sendMessage('You can also do ";lyrics [SongName by Author]"')
 			end
 		end
 	end
 end)
+
+sendMessage('I am a lyrics bot! Type ";lyrics [SongName]" and I will sing the song for you!')
+task.wait(2)
+sendMessage('You can also do ";lyrics [SongName by Author]"')
